@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import gbvision as gbv
 stdv = np.array([5, 40, 60])
-# stdv = np.array([0, 0, 0])
+stdv = np.array([0, 0, 0])
 
 # basically this whole piece of code is here to write the HSV values to thr.txt
 

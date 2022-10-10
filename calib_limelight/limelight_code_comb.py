@@ -13,7 +13,7 @@ blue_obj = track_object(cam=cam, pid_vals=[110, 253, 154], hue=[settings.HUE_KP,
                         settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
                         settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
                         range=[5, 40, 60], target= gbv.GameObject(0.212694462109))
-red_obj = track_object(cam=cam, pid_vals=[0, 0, 0], hue=[settings.HUE_KP, settings.HUE_KI,
+red_obj = track_object(cam=cam, pid_vals=[0, 255, 142], hue=[settings.HUE_KP, settings.HUE_KI,
                         settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
                         settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
                         range=[5, 40, 60], target=gbv.GameObject(0.212694462109))
