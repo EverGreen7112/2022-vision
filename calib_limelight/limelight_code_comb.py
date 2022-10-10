@@ -1,3 +1,4 @@
+from dataclasses import replace
 import math
 import socket
 import struct
@@ -33,23 +34,44 @@ def runPipeline(image, llrobot):
     global cam
     global balls_mode
     global hub_mode
-    mode = hub_mode
+    
     cam.width = 960
     cam.height = 720
+    # balls
+    obj = blue_obj # switch between blue and red
     
+    port = balls_port
+    obj.cam = cam
+    obj.track_cycle(image, mode)
+
+    mode = balls_mode
+    frame = image
+    frame = gbv.draw_circles(
+            image, obj.get_circs(), (255, 0, 0), thickness=5)
+    try:
+        frame2 = gbv.draw_rotated_rects(frame, [obj.get_bbox()], (0, 0, 255), thickness=5)
+        frame = frame2
+    except:
+        pass
+
+    locals = obj.get_locals()
+
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        sock.sendto(struct.pack('fff', locals[0], locals[1], locals[2]),
+                    ("255.255.255.255", port))
+    
+    
+    # hub:
+    mode = hub_mode
     port = hub_port
     obj = hub_obj
     obj.cam = cam
     obj.track_cycle(image, mode)
-
-    frame = image
+    
     largestContour = ()
-    if mode == hub_mode:
-        frame = gbv.draw_rotated_rects(
-            image, obj.get_rects(), (255, 0, 0), thickness=5)
-    elif mode == balls_mode:
-        frame = gbv.draw_circles(
-            image, obj.get_circs(), (255, 0, 0), thickness=5)
+    frame = gbv.draw_rotated_rects(
+        image, obj.get_rects(), (255, 0, 0), thickness=5)
     try:
         frame2 = gbv.draw_rotated_rects(frame, [obj.get_bbox()], (0, 0, 255), thickness=5)
         frame = frame2
