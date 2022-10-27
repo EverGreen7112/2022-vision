@@ -7,7 +7,7 @@ import numpy as np
 import settings as settings
 from track_object import track_object
 
-cam = gbv.USBCamera(settings.CAMERA_PORT, gbv.CameraData(777.3291449774972,1.0402162342 , 0.86742863824, name="limelight"))
+cam = gbv.USBCamera(settings.CAMERA_PORT, gbv.CameraData(777.3291449774972,1.0402162342 , 0.86742863824, pitch_angle=math.radians(25), name="limelight"))
 blue_obj = track_object(cam=cam, pid_vals=[110, 253, 154], hue=[settings.HUE_KP, settings.HUE_KI,
                         settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
                         settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
@@ -16,7 +16,7 @@ red_obj = track_object(cam=cam, pid_vals=[0, 255, 142], hue=[settings.HUE_KP, se
                         settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
                         settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
                         range=[5, 40, 60], target=gbv.GameObject(0.212694462109))
-hub_obj = track_object(cam=cam, pid_vals=[94, 118, 202], hue=[settings.HUE_KP, settings.HUE_KI,
+hub_obj = track_object(cam=cam, pid_vals=[94, 213, 216], hue=[settings.HUE_KP, settings.HUE_KI,
                         settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
                         settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
                         range=[10, 110, 90], target= gbv.GameObject(0.13490737563232041))
@@ -33,12 +33,13 @@ def runPipeline(image, llrobot):
     global cam
     global balls_mode
     global hub_mode
-    mode = balls_mode
+    mode = hub_mode
     cam.width = 960
     cam.height = 720
     
+    
     port = hub_port
-    obj = red_obj
+    obj = hub_obj
     obj.cam = cam
     obj.track_cycle(image, mode)
 
