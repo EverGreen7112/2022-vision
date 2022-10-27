@@ -7,48 +7,41 @@ import numpy as np
 import settings as settings
 from track_object import track_object
 
+denoise_hub = gbv.MedianBlur(3) + gbv.Dilate(5, 2) + gbv.Erode(5, 2) + gbv.DistanceTransformThreshold(0.1)
+denoise_red = gbv.MedianBlur(3) + gbv.Dilate(5, 2) + gbv.Erode(5, 2) + gbv.DistanceTransformThreshold(0.1)
+denoise_blue = gbv.MedianBlur(3) + gbv.Dilate(5, 2) + gbv.Erode(5, 2) + gbv.DistanceTransformThreshold(0.1)
 cam = gbv.USBCamera(settings.CAMERA_PORT, gbv.CameraData(777.3291449774972,1.0402162342 , 0.86742863824, pitch_angle=math.radians(25), name="limelight"))
-blue_obj = track_object(cam=cam, pid_vals=[110, 253, 154], hue=[settings.HUE_KP, settings.HUE_KI,
-                        settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
-                        settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
-                        range=[5, 40, 60], target= gbv.GameObject(0.212694462109))
-red_obj = track_object(cam=cam, pid_vals=[0, 255, 142], hue=[settings.HUE_KP, settings.HUE_KI,
-                        settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
-                        settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
-                        range=[5, 40, 60], target=gbv.GameObject(0.212694462109))
-hub_obj = track_object(cam=cam, pid_vals=[94, 213, 216], hue=[settings.HUE_KP, settings.HUE_KI,
-                        settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,
-                        settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
-                        range=[10, 110, 90], target= gbv.GameObject(0.13490737563232041))
-balls_port = 5801
-hub_port = 5800
-balls_mode = 0
-hub_mode = 1
+blue_obj = track_object(cam=cam, pid_vals=[110, 253, 154],
+                        hue=[settings.HUE_KP, settings.HUE_KI, settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI, settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
+                        range=[5, 40, 60], target= gbv.GameObject(0.212694462109), denoise_pipe = denoise_blue)
+red_obj = track_object(cam=cam, pid_vals=[0, 255, 142], 
+                        hue=[settings.HUE_KP, settings.HUE_KI,settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI,settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
+                        range=[5, 40, 60], target=gbv.GameObject(0.212694462109), denoise_pipe = denoise_red)
+hub_obj = track_object(cam=cam, pid_vals=[94, 213, 216],
+                        hue=[settings.HUE_KP, settings.HUE_KI, settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI, settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
+                        range=[10, 110, 90], target= gbv.GameObject(0.13490737563232041), denoise_pipe = denoise_hub)
+
 def runPipeline(image, llrobot):
     global blue_obj
     global red_obj 
     global hub_obj
-    global balls_port
-    global hub_port
     global cam
-    global balls_mode
-    global hub_mode
-    mode = hub_mode
+    mode = settings.HUB_MODE
     cam.width = 960
     cam.height = 720
     
     
-    port = hub_port
+    port = settings.HUB_PORT
     obj = hub_obj
     obj.cam = cam
     obj.track_cycle(image, mode)
 
     frame = image
     largestContour = ()
-    if mode == hub_mode:
+    if mode == settings.HUB_MODE:
         frame = gbv.draw_rotated_rects(
             image, obj.get_rects(), (255, 0, 0), thickness=5)
-    elif mode == balls_mode:
+    elif mode == settings.BALLS_MODE:
         frame = gbv.draw_circles(
             image, obj.get_circs(), (255, 0, 0), thickness=5)
     try:

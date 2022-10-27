@@ -14,21 +14,32 @@ def main():
     window = gbv.FeedWindow("feed")
     window.open()
     img = cv2.imread('thr.jpg')
-    while True:
-        # frame = window.show_and_get_frame()
-        # ok, frame = camera.read()
-        window.show_frame(img)
-        frame = img
+    # while True:
+    #     # frame = window.show_and_get_frame()
+    #     # ok, frame = camera.read()
+    #     window.show_frame(img)
+    #     frame = img
 
-        k = window.last_key_pressed
-        if k == 'r':
-            bbox = cv2.selectROI('feed', frame)
+    #     k = window.last_key_pressed
+    #     if k == 'r':
+    #         bbox = cv2.selectROI('feed', frame)
             
-            thr = gbv.median_threshold(frame, stdv, bbox, 'HSV')
+    #         thr = gbv.median_threshold(frame, stdv, bbox, 'HSV')
         
-            print(thr)
-            print(gbv.median_threshold(frame, [0, 0, 0], bbox, 'HSV'))
-            break
+    #         print(thr)
+    #         print(gbv.median_threshold(frame, [0, 0, 0], bbox, 'HSV'))
+    #         break
+    window.show_frame(img)
+    frame = img
+    bbox = cv2.selectROI('feed', frame)
+    
+    thr = gbv.median_threshold(frame, stdv, bbox, 'HSV')
+
+    # print(thr)
+    hue = thr.__getitem__(0)[0]
+    sat = thr.__getitem__(1)[0]
+    val = thr.__getitem__(2)[0]
+    print([hue, sat, val])
     cv2.destroyAllWindows()
 
     original = gbv.FeedWindow(window_name='original')
