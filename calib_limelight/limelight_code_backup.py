@@ -10,7 +10,7 @@ from track_object import track_object
 denoise_hub = gbv.MedianBlur(3) + gbv.Dilate(5, 2) + gbv.Erode(5, 2) + gbv.DistanceTransformThreshold(0.1)
 denoise_red = gbv.MedianBlur(3) + gbv.Dilate(5, 2) + gbv.Erode(5, 2) + gbv.DistanceTransformThreshold(0.1)
 denoise_blue = gbv.MedianBlur(3) + gbv.Dilate(5, 2) + gbv.Erode(5, 2) + gbv.DistanceTransformThreshold(0.1)
-cam = gbv.USBCamera(settings.CAMERA_PORT, gbv.CameraData(777.3291449774972,1.0402162342 , 0.86742863824, pitch_angle=math.radians(35.5), name="limelight"))
+cam = gbv.USBCamera(settings.CAMERA_PORT, gbv.CameraData(777.3291449774972,1.0402162342 , 0.86742863824, pitch_angle=math.radians(90 - 42), name="limelight"))
 blue_obj = track_object(cam=cam, pid_vals=[110, 253, 154],
                         hue=[settings.HUE_KP, settings.HUE_KI, settings.HUE_KD], sat=[settings.SAT_KP, settings.SAT_KI, settings.SAT_KD], val=[settings.VAL_KP, settings.VAL_KI, settings.VAL_KD],
                         range=[5, 40, 60], target= gbv.GameObject(0.212694462109), denoise_pipe = denoise_blue)
