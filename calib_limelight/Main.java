@@ -20,6 +20,7 @@ class Main{
                     (ByteBuffer.wrap(packet.getData()).order(ByteOrder.LITTLE_ENDIAN).getFloat(4)),
                     (ByteBuffer.wrap(packet.getData()).order(ByteOrder.LITTLE_ENDIAN).getFloat(8))};
                     System.out.println(String.format("x: %s, y: %s, z: %s", locals[0], locals[1], locals[2]));
+                    System.out.println(Math.toDegrees(Math.atan(locals[1]/locals[2])));
             }
         }
         catch (Exception e){
